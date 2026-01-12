@@ -43,6 +43,14 @@ function activate(context) {
         );
 
         const index = fs.readFileSync(indexPath, "utf-8");
+        // Build the webview URI for resources
+        const siteUri = panel.webview.asWebviewUri(
+          vscode.Uri.file(path.join(context.extensionPath, "site"))
+        );
+
+        // CSP to allow Shiki WASM and inline scripts
+        const cspMeta = `<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' ${siteUri}; style-src 'unsafe-inline' ${siteUri}; img-src ${siteUri} https: data:; font-src ${siteUri}; connect-src ${siteUri} https:;">`;
+
         const newIndex = index
           .replace(
             "<body>",
@@ -52,11 +60,7 @@ function activate(context) {
           )
           .replace(
             "<head>",
-            `<head><base href="${vscode.Uri.file(
-              path.join(context.extensionPath, "site")
-            ).with({
-              scheme: "vscode-resource"
-            })}/"/>`
+            `<head>${cspMeta}<base href="${siteUri}/">`
           );
 
         panel.webview.html = newIndex;

@@ -1,8 +1,8 @@
-import { getLanguage, getLanguageDependencies } from "./language-detector";
+import { getLanguage } from "./language-detector";
 
 describe("Can detect language", () => {
   test("javascript", () => {
-    expect(getLanguage("my-file.js")).toBe("js");
+    expect(getLanguage("my-file.js")).toBe("javascript");
   });
 
   test("jsx", () => {
@@ -26,20 +26,20 @@ describe("Can detect language", () => {
     });
   });
 
-  describe("markup", () => {
+  describe("html/xml", () => {
     test("html", () => {
-      expect(getLanguage("my-file.html")).toBe("markup");
+      expect(getLanguage("my-file.html")).toBe("html");
     });
 
     test("htm", () => {
-      expect(getLanguage("my-file.htm")).toBe("markup");
+      expect(getLanguage("my-file.htm")).toBe("html");
     });
 
     test("svg", () => {
-      expect(getLanguage("my-file.svg")).toBe("markup");
+      expect(getLanguage("my-file.svg")).toBe("xml");
     });
     test("xml", () => {
-      expect(getLanguage("my-file.xml")).toBe("markup");
+      expect(getLanguage("my-file.xml")).toBe("xml");
     });
   });
 
@@ -57,7 +57,7 @@ describe("Can detect language", () => {
     expect(getLanguage("my-file.sh")).toBe("bash");
   });
 
-  test("pyhton", () => {
+  test("python", () => {
     expect(getLanguage("my-file.py")).toBe("python");
   });
 
@@ -76,7 +76,7 @@ describe("Can detect language", () => {
   });
 
   test("assembly", () => {
-    expect(getLanguage("my-file.asm")).toBe("assembly");
+    expect(getLanguage("my-file.asm")).toBe("asm");
   });
 
   test("groovy", () => {
@@ -110,7 +110,7 @@ describe("Can detect language", () => {
   });
 
   test("bat", () => {
-    expect(getLanguage("my-file.bat")).toBe("batch");
+    expect(getLanguage("my-file.bat")).toBe("bat");
   });
 
   test("clojure", () => {
@@ -119,10 +119,6 @@ describe("Can detect language", () => {
 
   test("coffeescript", () => {
     expect(getLanguage("my-file.coffee")).toBe("coffeescript");
-  });
-
-  test("clojure", () => {
-    expect(getLanguage("my-file.clj")).toBe("clojure");
   });
 
   describe("cpp", () => {
@@ -139,26 +135,22 @@ describe("Can detect language", () => {
     expect(getLanguage("my-file.cs")).toBe("csharp");
   });
 
-  test("csp", () => {
-    expect(getLanguage("my-file.csp")).toBe("csp");
-  });
-
   test("diff", () => {
     expect(getLanguage("my-file.diff")).toBe("diff");
   });
 
-  describe("docker", () => {
+  describe("dockerfile", () => {
     test("long dockerfile", () => {
-      expect(getLanguage("my-file.dockerfile")).toBe("docker");
+      expect(getLanguage("my-file.dockerfile")).toBe("dockerfile");
     });
 
-    test("dockerfile", () => {
-      expect(getLanguage("Dockerfile")).toBe("docker");
+    test("Dockerfile", () => {
+      expect(getLanguage("Dockerfile")).toBe("dockerfile");
     });
   });
 
   test("fsharp", () => {
-    expect(getLanguage("my-file.fsharp")).toBe("fsharp");
+    expect(getLanguage("my-file.fs")).toBe("fsharp");
   });
 
   test("go", () => {
@@ -185,32 +177,16 @@ describe("Can detect language", () => {
     expect(getLanguage("my-file.md")).toBe("markdown");
   });
 
-  test("msdax", () => {
-    expect(getLanguage("my-file.msdax")).toBe("msdax");
-  });
-
-  test("sql", () => {
-    expect(getLanguage("my-file.mysql")).toBe("sql");
-  });
-
   test("objective-c", () => {
-    expect(getLanguage("my-file.objc")).toBe("objective-c");
-  });
-
-  test("pgsql", () => {
-    expect(getLanguage("my-file.pgsql")).toBe("pgsql");
+    expect(getLanguage("my-file.m")).toBe("objective-c");
   });
 
   test("php", () => {
     expect(getLanguage("my-file.php")).toBe("php");
   });
 
-  test("postiats", () => {
-    expect(getLanguage("my-file.postiats")).toBe("postiats");
-  });
-
   test("powershell", () => {
-    expect(getLanguage("my-file.ps")).toBe("powershell");
+    expect(getLanguage("my-file.ps1")).toBe("powershell");
   });
 
   test("pug", () => {
@@ -221,14 +197,6 @@ describe("Can detect language", () => {
     expect(getLanguage("my-file.r")).toBe("r");
   });
 
-  test("razor", () => {
-    expect(getLanguage("my-file.razor")).toBe("razor");
-  });
-
-  test("reason", () => {
-    expect(getLanguage("my-file.re")).toBe("reason");
-  });
-
   test("ruby", () => {
     expect(getLanguage("my-file.rb")).toBe("ruby");
   });
@@ -237,20 +205,16 @@ describe("Can detect language", () => {
     expect(getLanguage("my-file.rs")).toBe("rust");
   });
 
-  test("small basic", () => {
-    expect(getLanguage("my-file.smallbasic")).toBe("small basic");
-  });
-
   test("scala", () => {
     expect(getLanguage("my-file.scala")).toBe("scala");
   });
 
   test("scheme", () => {
-    expect(getLanguage("my-file.scheme")).toBe("scheme");
+    expect(getLanguage("my-file.scm")).toBe("scheme");
   });
 
   test("solidity", () => {
-    expect(getLanguage("my-file.solidity")).toBe("solidity");
+    expect(getLanguage("my-file.sol")).toBe("solidity");
   });
 
   test("swift", () => {
@@ -264,28 +228,38 @@ describe("Can detect language", () => {
   test("wasm", () => {
     expect(getLanguage("my-file.wasm")).toBe("wasm");
   });
+
+  test("vue", () => {
+    expect(getLanguage("my-file.vue")).toBe("vue");
+  });
+
+  test("svelte", () => {
+    expect(getLanguage("my-file.svelte")).toBe("svelte");
+  });
+
+  test("graphql", () => {
+    expect(getLanguage("my-file.graphql")).toBe("graphql");
+  });
+
+  test("elixir", () => {
+    expect(getLanguage("my-file.ex")).toBe("elixir");
+  });
+
+  test("toml", () => {
+    expect(getLanguage("my-file.toml")).toBe("toml");
+  });
 });
 
 describe("Fallback scenarios", () => {
   test("Random file extension", () => {
-    expect(getLanguage("my-file.nonsense")).toBe("js");
+    expect(getLanguage("my-file.nonsense")).toBe("javascript");
   });
 
   test("No file extension", () => {
-    expect(getLanguage("my-file")).toBe("js");
+    expect(getLanguage("my-file")).toBe("javascript");
   });
 
   test("Empty string", () => {
-    expect(getLanguage("")).toBe("js");
-  });
-});
-
-describe("Dependencies", () => {
-  test("tsx", () => {
-    expect(getLanguageDependencies("tsx")).toEqual(["jsx"]);
-  });
-
-  test("cpp", () => {
-    expect(getLanguageDependencies("cpp")).toEqual(["c"]);
+    expect(getLanguage("")).toBe("javascript");
   });
 });

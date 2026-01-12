@@ -1,5 +1,6 @@
-import { getLanguage, loadLanguage } from "./language-detector";
+import { getLanguage } from "./language-detector";
 import { getSlides, getChanges } from "./differ";
+import { initHighlighter } from "./shiki-tokenizer";
 
 const vscode = window.vscode;
 
@@ -15,20 +16,20 @@ function getCommits(path, last) {
   return new Promise((resolve, reject) => {
     window.addEventListener(
       "message",
-      event => {
+      (event) => {
         const commits = event.data;
-        commits.forEach(c => (c.date = new Date(c.date)));
+        commits.forEach((c) => (c.date = new Date(c.date)));
         resolve(commits);
       },
-      { once: true }
+      { once: true },
     );
 
     vscode.postMessage({
       command: "commits",
       params: {
         path,
-        last
-      }
+        last,
+      },
     });
   });
 }
@@ -36,22 +37,24 @@ function getCommits(path, last) {
 async function getVersions(last) {
   const path = getPath();
   const lang = getLanguage(path);
-  const langPromise = loadLanguage(lang);
+
+  // Initialize Shiki highlighter (no-op if already initialized)
+  const highlighterPromise = initHighlighter();
 
   const commits = await getCommits(path, last);
-  await langPromise;
+  await highlighterPromise;
 
-  const codes = commits.map(commit => commit.content);
-  const slides = getSlides(codes, lang);
+  const codes = commits.map((commit) => commit.content);
+  const slides = await getSlides(codes, lang);
   return commits.map((commit, i) => ({
     commit,
     lines: slides[i],
-    changes: getChanges(slides[i])
+    changes: getChanges(slides[i]),
   }));
 }
 
 export default {
   showLanding,
   getPath,
-  getVersions
+  getVersions,
 };

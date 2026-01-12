@@ -3,18 +3,27 @@ import animation from "./animation";
 import theme from "./nightOwl";
 import Scroller from "./scroller";
 
-const themeStylesByType = Object.create(null);
-theme.styles.forEach(({ types, style }) => {
-  types.forEach(type => {
-    themeStylesByType[type] = Object.assign(
-      themeStylesByType[type] || {},
-      style
-    );
-  });
-});
-
 function getLineHeight(line, i, { styles }) {
   return styles[i].height != null ? styles[i].height : 15;
+}
+
+function getTokenStyle(token) {
+  // Shiki tokens have color and optional fontStyle directly
+  // We use these directly instead of type-based lookup
+  const style = {};
+  if (token.color) {
+    style.color = token.color;
+  }
+  if (token.fontStyle) {
+    // fontStyle from Shiki can be 1 (italic), 2 (bold), or 3 (both)
+    if (token.fontStyle & 1) {
+      style.fontStyle = "italic";
+    }
+    if (token.fontStyle & 2) {
+      style.fontWeight = "bold";
+    }
+  }
+  return style;
 }
 
 function getLine(line, i, { styles }) {
@@ -26,9 +35,9 @@ function getLine(line, i, { styles }) {
     >
       {!line.tokens.length && <br />}
       {line.tokens.map((token, i) => {
-        const style = themeStylesByType[token.type] || {};
+        const tokenStyle = getTokenStyle(token);
         return (
-          <span style={style} key={i}>
+          <span style={tokenStyle} key={i}>
             {token.content}
           </span>
         );
