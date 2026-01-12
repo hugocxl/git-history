@@ -1,0 +1,47 @@
+{
+  "project": {
+    "name": "git-history",
+    "type": "monorepo",
+    "language": "javascript",
+    "framework": "react"
+  },
+  "conventions": {
+    "testPattern": "*.test.js",
+    "storyPattern": "*.story.js",
+    "stylePattern": "*.css",
+    "formatting": "prettier",
+    "moduleSystem": "esm-with-cjs"
+  },
+  "paths": {
+    "web": "src",
+    "cli": "cli",
+    "vscodeExtension": "vscode-ext",
+    "tests": ["src/**/*.test.js", "vscode-ext/test/**/*.js"],
+    "stories": "src/**/*.story.js"
+  },
+  "commands": {
+    "dev": "yarn start",
+    "build": "yarn build",
+    "test": "yarn test",
+    "format": "yarn format",
+    "storybook": "yarn storybook"
+  },
+  "context": {
+    "keyFiles": [
+      "src/app.js",
+      "src/history.js",
+      "src/slide.js",
+      "src/git-providers/providers.js",
+      "src/git-providers/versioner.worker.js",
+      "src/git-providers/differ.js",
+      "src/animation.js",
+      "vscode-ext/extension.js",
+      "cli/cli.js"
+    ],
+    "entryPoints": {
+      "web": "src/index.js",
+      "cli": "cli/cli.js",
+      "vscode": "vscode-ext/extension.js"
+    }
+  }
+}
