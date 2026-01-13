@@ -17,7 +17,10 @@
       "WebFetch(domain:diffs.com)",
       "Bash(pnpm add:*)",
       "Bash(pnpm format:*)",
-      "Bash(npx biome:*)"
+      "Bash(npx biome:*)",
+      "Bash(pnpm publish)",
+      "Bash(npx vsce publish)",
+      "Bash(npx vsce publish --no-dependencies)"
     ]
   }
 }
