@@ -2,17 +2,17 @@
 
 ## VS Code Marketplace (Recommended)
 
-The easiest way to install Git File History is through the VS Code Marketplace:
+The easiest way to install Git File Timeline is through the VS Code Marketplace:
 
 1. Open VS Code
 2. Go to the Extensions view (`Cmd+Shift+X` on macOS, `Ctrl+Shift+X` on Windows/Linux)
-3. Search for "Git File History"
+3. Search for "Git File Timeline"
 4. Click **Install**
 
 Or install directly from the command line:
 
 ```bash
-code --install-extension hugocxl.git-file-history
+code --install-extension hugocxl.git-file-timeline
 ```
 
 ## Manual Installation (VSIX)
@@ -49,7 +49,7 @@ This creates a `.vsix` file in the project root that you can install manually.
 
 ## Requirements
 
-- **VS Code**: Version 1.95.0 or higher
+- **VS Code**: Version 1.108.0 or higher
 - **Git**: Must be installed and available in your system PATH
 - **Repository**: The extension only works within Git repositories
 
@@ -57,7 +57,7 @@ This creates a `.vsix` file in the project root that you can install manually.
 
 1. Open a Git repository in VS Code
 2. Right-click on any file in the Explorer
-3. You should see **"Git File History"** in the context menu
+3. You should see **"Git File Timeline"** in the context menu
 
 ## Troubleshooting
 
@@ -86,11 +86,11 @@ If not installed, download from [git-scm.com](https://git-scm.com/).
 ## Uninstallation
 
 1. Go to Extensions view
-2. Find "Git File History"
+2. Find "Git File Timeline"
 3. Click **Uninstall**
 
 Or from command line:
 
 ```bash
-code --uninstall-extension hugocxl.git-file-history
+code --uninstall-extension hugocxl.git-file-timeline
 ```

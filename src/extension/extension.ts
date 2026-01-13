@@ -18,7 +18,7 @@ function getWorkerPath(context: vscode.ExtensionContext): vscode.Uri {
 
 export function activate(context: vscode.ExtensionContext) {
   const disposable = vscode.commands.registerCommand(
-    "git-file-history.show",
+    "git-file-timeline.show",
     async (uri?: vscode.Uri) => {
       // Get file path from context menu or active editor
       const filePath =
@@ -133,7 +133,7 @@ function getWebviewContent(
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'nonce-${nonce}' 'wasm-unsafe-eval'; style-src ${webview.cspSource} 'unsafe-inline'; font-src ${webview.cspSource}; img-src ${webview.cspSource} https: data:; worker-src blob:; connect-src ${webview.cspSource};">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="${styleUri}">
-  <title>Git File History</title>
+  <title>Git File Timeline</title>
 </head>
 <body>
   <div id="root"></div>

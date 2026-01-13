@@ -1,8 +1,8 @@
 <h1 align="center">
   <br>
-  <img src="https://raw.githubusercontent.com/hugocxl/git-file-history/master/icon.png" alt="icon" width="100">
+  <img src="https://raw.githubusercontent.com/hugocxl/git-file-timeline/master/icon.png" alt="icon" width="100">
   <br>
-  Git File History
+  Git File Timeline
   <br>
 </h1>
 
@@ -18,7 +18,7 @@
 
 Browse through the commit history of any file in your repository with beautiful, side-by-side syntax-highlighted diffs.
 
-![Git File History Demo](https://raw.githubusercontent.com/hugocxl/git-history/master/assets/demo.gif)
+![Git File Timeline Demo](https://raw.githubusercontent.com/hugocxl/git-history/master/assets/demo.gif)
 
 ## Features
 
@@ -33,17 +33,17 @@ Browse through the commit history of any file in your repository with beautiful,
 
 ### From Explorer
 
-Right-click any file in the Explorer sidebar and select **"Git File History"**.
+Right-click any file in the Explorer sidebar and select **"Git File Timeline"**.
 
 ### From Editor
 
-Right-click anywhere in an open file and select **"Git File History"**.
+Right-click anywhere in an open file and select **"Git File Timeline"**.
 
 ### From Command Palette
 
 1. Open the file you want to inspect
 2. Press `Cmd+Shift+P` (macOS) or `Ctrl+Shift+P` (Windows/Linux)
-3. Type "Git File History" and press Enter
+3. Type "Git File Timeline" and press Enter
 
 ## Keyboard Shortcuts
 
@@ -54,7 +54,7 @@ Right-click anywhere in an open file and select **"Git File History"**.
 
 ## Requirements
 
-- Visual Studio Code 1.95.0 or higher
+- Visual Studio Code 1.108.0 or higher
 - Git installed and available in PATH
 - A Git repository with commit history
 

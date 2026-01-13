@@ -20,7 +20,9 @@
       "Bash(npx biome:*)",
       "Bash(pnpm publish)",
       "Bash(npx vsce publish)",
-      "Bash(npx vsce publish --no-dependencies)"
+      "Bash(npx vsce publish --no-dependencies)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nRename extension to git-file-timeline\n\n- Rename package from git-file-history to git-file-timeline\n- Update display name to Git File Timeline\n- Update all command IDs and menu titles\n- Bump VS Code engine requirement to 1.108.0\n- Bump version to 1.0.1\n\n🤖 Generated with [Claude Code]\\(https://claude.com/claude-code\\)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")"
     ]
   }
 }

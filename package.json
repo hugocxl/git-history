@@ -1,8 +1,8 @@
 {
-  "name": "git-file-history",
-  "displayName": "Git File History",
+  "name": "git-file-timeline",
+  "displayName": "Git File Timeline",
   "description": "Visual git file history with syntax-highlighted diffs",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "publisher": "hugocxl",
   "author": {
     "name": "Hugo Corta",
@@ -43,20 +43,20 @@
   "contributes": {
     "commands": [
       {
-        "command": "git-file-history.show",
-        "title": "Git File History"
+        "command": "git-file-timeline.show",
+        "title": "Git File Timeline"
       }
     ],
     "menus": {
       "explorer/context": [
         {
-          "command": "git-file-history.show",
+          "command": "git-file-timeline.show",
           "when": "resourceScheme == file"
         }
       ],
       "editor/context": [
         {
-          "command": "git-file-history.show"
+          "command": "git-file-timeline.show"
         }
       ]
     }
