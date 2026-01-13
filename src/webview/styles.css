@@ -70,7 +70,9 @@ body {
   border-radius: 6px;
   cursor: pointer;
   scroll-snap-align: center;
-  transition: border-color 0.15s, background-color 0.15s;
+  transition:
+    border-color 0.15s,
+    background-color 0.15s;
   text-align: left;
   font-family: inherit;
   font-size: inherit;
@@ -162,4 +164,110 @@ body {
   justify-content: center;
   height: 100%;
   color: var(--vscode-descriptionForeground, #808080);
+}
+
+/* Settings footer */
+.settings-footer {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 4px 16px;
+  background: var(--vscode-sideBar-background, #252526);
+  border-top: 1px solid var(--vscode-panel-border, #404040);
+  z-index: 100;
+}
+
+/* Settings field (label + input) */
+.settings-field {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--vscode-descriptionForeground, #808080);
+  font-size: 12px;
+  cursor: pointer;
+  transition: color 0.15s;
+}
+
+.settings-field:hover {
+  color: var(--vscode-foreground, #d4d4d4);
+}
+
+.settings-field svg {
+  flex-shrink: 0;
+}
+
+.settings-label {
+  white-space: nowrap;
+}
+
+/* Select dropdown */
+.settings-select {
+  padding: 4px 8px;
+  background: var(--vscode-dropdown-background, #3c3c3c);
+  border: 1px solid var(--vscode-dropdown-border, #454545);
+  border-radius: 4px;
+  color: var(--vscode-dropdown-foreground, #d4d4d4);
+  font-family: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.settings-select:hover {
+  border-color: var(--vscode-focusBorder, #007fd4);
+}
+
+.settings-select:focus {
+  border-color: var(--vscode-focusBorder, #007fd4);
+}
+
+.settings-select option {
+  background: var(--vscode-dropdown-background, #3c3c3c);
+  color: var(--vscode-dropdown-foreground, #d4d4d4);
+}
+
+.settings-select optgroup {
+  font-weight: 600;
+  color: var(--vscode-descriptionForeground, #808080);
+}
+
+/* Custom checkbox */
+.settings-checkbox {
+  position: relative;
+}
+
+.settings-checkbox input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.settings-checkbox .checkmark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  background: var(--vscode-checkbox-background, #3c3c3c);
+  border: 1px solid var(--vscode-checkbox-border, #454545);
+  border-radius: 3px;
+  transition: all 0.15s;
+}
+
+.settings-checkbox:hover .checkmark {
+  border-color: var(--vscode-focusBorder, #007fd4);
+}
+
+.settings-checkbox input[type="checkbox"]:checked + .checkmark {
+  background: var(--vscode-checkbox-selectBackground, #007fd4);
+  border-color: var(--vscode-checkbox-selectBackground, #007fd4);
+}
+
+.settings-checkbox .checkmark svg {
+  color: var(--vscode-checkbox-foreground, #fff);
 }

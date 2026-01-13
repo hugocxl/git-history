@@ -1,20 +1,106 @@
 // =============================================================================
 // Dependencies
 // =============================================================================
-import { createRoot } from "react-dom/client";
-import { MultiFileDiff, WorkerPoolContextProvider } from "@pierre/diffs/react";
+
+import type { DiffsThemeNames } from "@pierre/diffs";
+import {
+  MultiFileDiff,
+  useWorkerPool,
+  WorkerPoolContextProvider,
+} from "@pierre/diffs/react";
+import {
+  Check,
+  Columns2,
+  Hash,
+  Paintbrush,
+  Palette,
+  UnfoldVertical,
+} from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { createRoot } from "react-dom/client";
 import "./styles.css";
 
 // =============================================================================
 // Types
 // =============================================================================
-import type { Commit, ToWebviewMessage, VSCodeAPI } from "./types";
+import type {
+  Commit,
+  DiffSettings,
+  ToWebviewMessage,
+  VSCodeAPI,
+} from "./types";
 
 // =============================================================================
 // Constants
 // =============================================================================
 const WORKER_POOL_SIZE = 4;
+const SETTINGS_KEY = "diffSettings";
+
+const DEFAULT_SETTINGS: DiffSettings = {
+  layout: "split",
+  theme: "github-dark",
+  lineNumbers: true,
+  background: true,
+  expandUnchanged: true,
+};
+
+const THEMES: { id: DiffsThemeNames; label: string; type: "dark" | "light" }[] =
+  [
+    // Dark themes
+    { id: "github-dark", label: "GitHub Dark", type: "dark" },
+    { id: "github-dark-dimmed", label: "GitHub Dimmed", type: "dark" },
+    { id: "dracula", label: "Dracula", type: "dark" },
+    { id: "dracula-soft", label: "Dracula Soft", type: "dark" },
+    { id: "one-dark-pro", label: "One Dark Pro", type: "dark" },
+    { id: "nord", label: "Nord", type: "dark" },
+    { id: "tokyo-night", label: "Tokyo Night", type: "dark" },
+    { id: "night-owl", label: "Night Owl", type: "dark" },
+    { id: "monokai", label: "Monokai", type: "dark" },
+    { id: "vitesse-dark", label: "Vitesse Dark", type: "dark" },
+    { id: "vitesse-black", label: "Vitesse Black", type: "dark" },
+    { id: "catppuccin-mocha", label: "Catppuccin Mocha", type: "dark" },
+    { id: "catppuccin-macchiato", label: "Catppuccin Macchiato", type: "dark" },
+    { id: "catppuccin-frappe", label: "Catppuccin Frappé", type: "dark" },
+    { id: "rose-pine", label: "Rosé Pine", type: "dark" },
+    { id: "rose-pine-moon", label: "Rosé Pine Moon", type: "dark" },
+    { id: "material-theme", label: "Material", type: "dark" },
+    { id: "material-theme-darker", label: "Material Darker", type: "dark" },
+    { id: "material-theme-ocean", label: "Material Ocean", type: "dark" },
+    {
+      id: "material-theme-palenight",
+      label: "Material Palenight",
+      type: "dark",
+    },
+    { id: "ayu-dark", label: "Ayu Dark", type: "dark" },
+    { id: "poimandres", label: "Poimandres", type: "dark" },
+    { id: "slack-dark", label: "Slack Dark", type: "dark" },
+    { id: "solarized-dark", label: "Solarized Dark", type: "dark" },
+    { id: "synthwave-84", label: "Synthwave '84", type: "dark" },
+    { id: "everforest-dark", label: "Everforest Dark", type: "dark" },
+    { id: "gruvbox-dark-medium", label: "Gruvbox Dark", type: "dark" },
+    { id: "andromeeda", label: "Andromeeda", type: "dark" },
+    { id: "aurora-x", label: "Aurora X", type: "dark" },
+    { id: "houston", label: "Houston", type: "dark" },
+    { id: "laserwave", label: "Laserwave", type: "dark" },
+    { id: "min-dark", label: "Min Dark", type: "dark" },
+    { id: "plastic", label: "Plastic", type: "dark" },
+    { id: "vesper", label: "Vesper", type: "dark" },
+    { id: "dark-plus", label: "Dark+", type: "dark" },
+    // Light themes
+    { id: "github-light", label: "GitHub Light", type: "light" },
+    { id: "vitesse-light", label: "Vitesse Light", type: "light" },
+    { id: "catppuccin-latte", label: "Catppuccin Latte", type: "light" },
+    { id: "rose-pine-dawn", label: "Rosé Pine Dawn", type: "light" },
+    { id: "material-theme-lighter", label: "Material Lighter", type: "light" },
+    { id: "solarized-light", label: "Solarized Light", type: "light" },
+    { id: "everforest-light", label: "Everforest Light", type: "light" },
+    { id: "gruvbox-light-medium", label: "Gruvbox Light", type: "light" },
+    { id: "one-light", label: "One Light", type: "light" },
+    { id: "slack-ochin", label: "Slack Ochin", type: "light" },
+    { id: "snazzy-light", label: "Snazzy Light", type: "light" },
+    { id: "min-light", label: "Min Light", type: "light" },
+    { id: "light-plus", label: "Light+", type: "light" },
+  ];
 
 // Get VS Code API - only available in webview context
 let vscode: VSCodeAPI | null = null;
@@ -82,9 +168,141 @@ function formatDate(dateStr: string): string {
   return date.toLocaleDateString();
 }
 
+/**
+ * Custom hook for persisting diff settings across sessions
+ * Uses VS Code webview state API for persistence
+ */
+function useSettings(): [
+  DiffSettings,
+  (updates: Partial<DiffSettings>) => void,
+] {
+  const [settings, setSettingsState] = useState<DiffSettings>(() => {
+    // Try to restore settings from VS Code state
+    if (vscode) {
+      const state = vscode.getState() as {
+        [SETTINGS_KEY]?: DiffSettings;
+      } | null;
+      if (state?.[SETTINGS_KEY]) {
+        return { ...DEFAULT_SETTINGS, ...state[SETTINGS_KEY] };
+      }
+    }
+    return DEFAULT_SETTINGS;
+  });
+
+  const updateSettings = useCallback((updates: Partial<DiffSettings>) => {
+    setSettingsState((prev) => {
+      const next = { ...prev, ...updates };
+      // Persist to VS Code state
+      if (vscode) {
+        const currentState =
+          (vscode.getState() as Record<string, unknown>) || {};
+        vscode.setState({ ...currentState, [SETTINGS_KEY]: next });
+      }
+      return next;
+    });
+  }, []);
+
+  return [settings, updateSettings];
+}
+
 // =============================================================================
 // Components
 // =============================================================================
+
+interface DiffSettingsBarProps {
+  settings: DiffSettings;
+  onUpdate: (updates: Partial<DiffSettings>) => void;
+}
+
+function DiffSettingsFooter({ settings, onUpdate }: DiffSettingsBarProps) {
+  return (
+    <footer className="settings-footer">
+      {/* Layout select */}
+      <label className="settings-field">
+        <Columns2 size={14} />
+        <select
+          className="settings-select"
+          value={settings.layout}
+          onChange={(e) =>
+            onUpdate({ layout: e.target.value as "unified" | "split" })
+          }
+        >
+          <option value="split">Split</option>
+          <option value="unified">Unified</option>
+        </select>
+      </label>
+
+      {/* Theme select */}
+      <label className="settings-field">
+        <Palette size={14} />
+        <select
+          className="settings-select"
+          value={settings.theme}
+          onChange={(e) =>
+            onUpdate({ theme: e.target.value as DiffsThemeNames })
+          }
+        >
+          <optgroup label="Dark">
+            {THEMES.filter((t) => t.type === "dark").map((theme) => (
+              <option key={theme.id} value={theme.id}>
+                {theme.label}
+              </option>
+            ))}
+          </optgroup>
+          <optgroup label="Light">
+            {THEMES.filter((t) => t.type === "light").map((theme) => (
+              <option key={theme.id} value={theme.id}>
+                {theme.label}
+              </option>
+            ))}
+          </optgroup>
+        </select>
+      </label>
+
+      {/* Line numbers checkbox */}
+      <label className="settings-field settings-checkbox">
+        <Hash size={14} />
+        <span className="settings-label">Line numbers</span>
+        <input
+          type="checkbox"
+          checked={settings.lineNumbers}
+          onChange={(e) => onUpdate({ lineNumbers: e.target.checked })}
+        />
+        <span className="checkmark">
+          {settings.lineNumbers && <Check size={12} />}
+        </span>
+      </label>
+
+      {/* Background checkbox */}
+      <label className="settings-field settings-checkbox">
+        <Paintbrush size={14} />
+        <span className="settings-label">Background</span>
+        <input
+          type="checkbox"
+          checked={settings.background}
+          onChange={(e) => onUpdate({ background: e.target.checked })}
+        />
+        <span className="checkmark">
+          {settings.background && <Check size={12} />}
+        </span>
+      </label>
+
+      {/* Expand unchanged checkbox */}
+      <label className="settings-field settings-checkbox">
+        <UnfoldVertical size={14} />
+        <span className="settings-label">Expand</span>
+        <input
+          type="checkbox"
+          checked={settings.expandUnchanged}
+          onChange={(e) => onUpdate({ expandUnchanged: e.target.checked })}
+        />
+        <span className="checkmark">
+          {settings.expandUnchanged && <Check size={12} />}
+        </span>
+      </label>
+    </footer>
+  );
+}
 
 interface CommitCarouselProps {
   commits: Commit[];
@@ -152,6 +370,64 @@ function CommitCarousel({
   );
 }
 
+interface DiffViewerProps {
+  oldFile: { contents: string; name: string };
+  newFile: { contents: string; name: string };
+  settings: DiffSettings;
+}
+
+function DiffViewer({ oldFile, newFile, settings }: DiffViewerProps) {
+  const pool = useWorkerPool();
+
+  // Update worker pool theme when settings change
+  useEffect(() => {
+    if (pool) {
+      pool.setRenderOptions({ theme: settings.theme });
+    }
+  }, [pool, settings.theme]);
+
+  // Build data attributes for line numbers and background
+  const dataAttrs: Record<string, string> = {};
+  if (!settings.lineNumbers) {
+    dataAttrs["data-disable-line-numbers"] = "";
+  }
+  if (!settings.background) {
+    dataAttrs["data-disable-background"] = "";
+  }
+
+  return (
+    <MultiFileDiff
+      oldFile={oldFile}
+      newFile={newFile}
+      options={{
+        diffStyle: settings.layout,
+        lineDiffType: "word-alt",
+        expandUnchanged: settings.expandUnchanged,
+        diffIndicators: "bars",
+        theme: settings.theme,
+        unsafeCSS: `
+          [data-diffs-header], [data-diffs], [data-error-wrapper] {
+            --diffs-bg: transparent;
+          }
+          [data-line-type="context-expanded"] {
+            --diffs-line-bg: transparent;
+          }
+          ${
+            !settings.background
+              ? `
+          [data-line-type="added"], [data-line-type="deleted"], [data-line-type="modified"] {
+            --diffs-line-bg: transparent !important;
+          }
+          `
+              : ""
+          }
+        `,
+      }}
+      {...dataAttrs}
+    />
+  );
+}
+
 function App() {
   const [commits, setCommits] = useState<Commit[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -159,6 +435,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [hasMore, setHasMore] = useState(true);
+  const [settings, updateSettings] = useSettings();
 
   // Worker pool state
   const [workerFactory, setWorkerFactory] = useState<(() => Worker) | null>(
@@ -309,27 +586,13 @@ function App() {
         </div>
       </div>
       <div className="diff-container">
-        <MultiFileDiff
+        <DiffViewer
           oldFile={{ contents: previousCommit.content, name: fileName }}
           newFile={{ contents: currentCommit.content, name: fileName }}
-          options={{
-            diffStyle: "split",
-            lineDiffType: "word-alt",
-            expandUnchanged: true,
-            diffIndicators: "bars",
-            theme: "pierre-dark",
-            unsafeCSS: `
-              [data-diffs-header], [data-diffs], [data-error-wrapper] {
-                --diffs-bg: transparent;
-              }
-
-              [data-line-type="context-expanded"] {
-                --diffs-line-bg: transparent;
-              }
-          `,
-          }}
+          settings={settings}
         />
       </div>
+      <DiffSettingsFooter settings={settings} onUpdate={updateSettings} />
     </div>
   );
 
@@ -342,7 +605,7 @@ function App() {
           poolSize: WORKER_POOL_SIZE,
         }}
         highlighterOptions={{
-          theme: "pierre-dark",
+          theme: settings.theme,
         }}
       >
         {content}

@@ -1,3 +1,5 @@
+import type { DiffsThemeNames } from "@pierre/diffs";
+
 /** Commit data from git log */
 export interface Commit {
   hash: string;
@@ -5,6 +7,18 @@ export interface Commit {
   date: string;
   message: string;
   content: string;
+}
+
+/** Diff viewer layout mode */
+export type DiffLayout = "unified" | "split";
+
+/** Diff viewer settings persisted across sessions */
+export interface DiffSettings {
+  layout: DiffLayout;
+  theme: DiffsThemeNames;
+  lineNumbers: boolean;
+  background: boolean;
+  expandUnchanged: boolean;
 }
 
 /** Messages sent from extension host to webview */

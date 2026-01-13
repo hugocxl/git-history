@@ -13,7 +13,11 @@
       "Bash(pnpm typecheck:*)",
       "Bash(pnpm build:*)",
       "Bash(pnpm check:*)",
-      "Bash(pnpm run build:*)"
+      "Bash(pnpm run build:*)",
+      "WebFetch(domain:diffs.com)",
+      "Bash(pnpm add:*)",
+      "Bash(pnpm format:*)",
+      "Bash(npx biome:*)"
     ]
   }
 }

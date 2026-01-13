@@ -1,6 +1,20 @@
-# Git File History
+<h1 align="center">
+  <br>
+  <img src="https://raw.githubusercontent.com/hugocxl/git-file-history/master/icon.png" alt="icon" width="100">
+  <br>
+  Git File History
+  <br>
+</h1>
 
-**Visual git file history with syntax-highlighted diffs**
+<p align="center">
+  <strong>Visual git file history with syntax-highlighted diffs</strong>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/PRs-welcome-%235FCC6F.svg" alt="PRs welcome!" />
+
+  <img alt="License" src="https://img.shields.io/badge/license-MIT-%235FCC6F">
+</p>
 
 Browse through the commit history of any file in your repository with beautiful, side-by-side syntax-highlighted diffs.
 
