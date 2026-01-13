@@ -116,6 +116,40 @@ body {
   flex-shrink: 0;
 }
 
+/* Diff header */
+.diff-header {
+  display: flex;
+  border-bottom: 1px solid var(--vscode-panel-border, #404040);
+  background: var(--vscode-sideBar-background, #252526);
+}
+
+.diff-header-side {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+}
+
+.diff-header-side:first-child {
+  border-right: 1px solid var(--vscode-panel-border, #404040);
+}
+
+.diff-header-hash {
+  font-family: var(--vscode-editor-font-family, monospace);
+  font-size: 0.9em;
+  color: var(--vscode-textLink-foreground, #3794ff);
+}
+
+.diff-header-author {
+  color: var(--vscode-foreground, #d4d4d4);
+}
+
+.diff-header-date {
+  color: var(--vscode-descriptionForeground, #808080);
+  font-size: 0.9em;
+}
+
 /* Diff container */
 .diff-container {
   flex: 1;

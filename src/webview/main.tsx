@@ -284,6 +284,30 @@ function App() {
         hasMore={hasMore}
         onLoadMore={loadMore}
       />
+      <div className="diff-header">
+        <div className="diff-header-side">
+          <span className="diff-header-hash">{previousCommit.hash}</span>
+          <span className="diff-header-author">{previousCommit.author}</span>
+          <span className="diff-header-date">
+            {new Date(previousCommit.date).toLocaleDateString(undefined, {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            })}
+          </span>
+        </div>
+        <div className="diff-header-side">
+          <span className="diff-header-hash">{currentCommit.hash}</span>
+          <span className="diff-header-author">{currentCommit.author}</span>
+          <span className="diff-header-date">
+            {new Date(currentCommit.date).toLocaleDateString(undefined, {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            })}
+          </span>
+        </div>
+      </div>
       <div className="diff-container">
         <MultiFileDiff
           oldFile={{ contents: previousCommit.content, name: fileName }}
