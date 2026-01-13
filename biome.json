@@ -43,15 +43,6 @@
     }
   },
   "files": {
-    "ignore": [
-      "node_modules",
-      "build",
-      "dist",
-      "*.min.js",
-      "cli/site",
-      "vscode-ext/site",
-      "yarn.lock",
-      "package-lock.json"
-    ]
+    "ignore": ["node_modules", "dist", "*.min.js", "pnpm-lock.yaml"]
   }
 }

@@ -1,43 +1,68 @@
 {
-  "name": "githistory-web",
+  "name": "git-file-history",
+  "displayName": "Git File History",
+  "description": "Visual git file history with syntax-highlighted diffs",
   "version": "2.0.0",
-  "type": "module",
+  "publisher": "pomber",
+  "license": "MIT",
   "repository": "pomber/git-history",
-  "private": true,
+  "galleryBanner": {
+    "color": "#011627",
+    "theme": "dark"
+  },
   "engines": {
-    "node": ">=20.0.0"
+    "vscode": "^1.95.0"
+  },
+  "categories": ["Other"],
+  "keywords": ["git", "history", "log", "file", "commit", "diff"],
+  "main": "./dist/extension.js",
+  "activationEvents": [],
+  "contributes": {
+    "commands": [
+      {
+        "command": "git-file-history.show",
+        "title": "Git File History"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "git-file-history.show",
+          "when": "resourceScheme == file"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "git-file-history.show"
+        }
+      ]
+    }
   },
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview",
-    "typecheck": "tsc --noEmit",
+    "dev": "concurrently \"pnpm dev:ext\" \"pnpm dev:webview\"",
+    "dev:ext": "vite build --mode extension --watch",
+    "dev:webview": "vite build --watch",
+    "build": "vite build --mode extension && vite build",
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.webview.json --noEmit",
     "check": "biome check .",
     "format": "biome format --write .",
-    "lint": "biome lint .",
-    "lint:fix": "biome lint --write .",
-    "test": "vitest run",
-    "test:watch": "vitest"
+    "package": "pnpm build && vsce package --no-dependencies"
   },
   "dependencies": {
     "@pierre/diffs": "^1.0.0",
-    "diff": "^7.0.0",
-    "js-base64": "^3.7.7",
-    "netlify-auth-providers": "^1.0.0-alpha5",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "react-swipeable": "^7.0.2",
-    "rebound": "^0.1.0"
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
-    "@storybook/react": "^8.4.7",
-    "@types/diff": "^6.0.0",
+    "@types/node": "^22.10.0",
     "@types/react": "^19.0.2",
     "@types/react-dom": "^19.0.2",
+    "@types/vscode": "^1.95.0",
     "@vitejs/plugin-react": "^4.3.4",
+    "@vscode/vsce": "^3.2.0",
+    "concurrently": "^9.1.0",
     "typescript": "^5.7.2",
-    "vite": "^6.0.7",
-    "vitest": "^2.1.8"
+    "vite": "^6.0.7"
   }
 }
